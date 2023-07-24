@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  dbsqlsever:
+    image: mcr.microsoft.com/mssql/server
+    user: root
+    restart: always
+    environment:
+            SA_PASSWORD: Hoannt0509@
+            MSSQL_PID: "Express"
+            ACCEPT_EULA: "Y"
+    volumes:
+    - mssql_data:/var/opt/mssql
+    ports:
+    - "1433:1433"
+  ecm.api:
+    image: ${DOCKER_REGISTRY-}ecmapi   
+    ports:
+      - 8080:443
+    build:
+      context: .
+      dockerfile: ECM.Api/Dockerfile 
+    depends_on:
+    - dbsqlsever
+volumes:
+    mssql_data:
